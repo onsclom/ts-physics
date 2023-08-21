@@ -42,10 +42,10 @@ function update() {
     })
   }
 
-  const physicsSteps = 2
-  const physicsDelta = 1 / physicsSteps
+  const physicSteps = 2
+  const physicDelta = 1 / physicSteps
 
-  for (let i = 0; i < physicsSteps; i++) {
+  for (let i = 0; i < physicSteps; i++) {
     // update circles
     circles.forEach((circle) => {
       const vel = [
@@ -55,7 +55,7 @@ function update() {
       circle.ogPos = [...circle.pos]
 
       // apply grav
-      circle.pos[1] += 0.075 * physicsDelta ** 2
+      circle.pos[1] += 0.075 * physicDelta ** 2
 
       // apply mouse force
       const mouseDiff: [number, number] = [
@@ -66,8 +66,8 @@ function update() {
       const dist = Math.sqrt(distSquared)
       if (dist < 50) {
         const normalized = normalize(mouseDiff)
-        circle.pos[0] -= normalized[0] * physicsDelta ** 2
-        circle.pos[1] -= normalized[1] * physicsDelta ** 2
+        circle.pos[0] -= normalized[0] * physicDelta ** 2
+        circle.pos[1] -= normalized[1] * physicDelta ** 2
       }
 
       // apply velocity
