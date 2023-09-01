@@ -42,7 +42,7 @@ function update() {
     })
   }
 
-  const physicSteps = 2
+  const physicSteps = 4
   const physicDelta = 1 / physicSteps
 
   for (let i = 0; i < physicSteps; i++) {
@@ -75,28 +75,31 @@ function update() {
       circle.pos[1] += vel[1]
     })
 
-    // apply collission
-    circles.forEach((circle) => {
-      circles.forEach((otherCircle) => {
-        if (circle === otherCircle) return
-        const difference = [
-          circle.pos[0] - otherCircle.pos[0],
-          circle.pos[1] - otherCircle.pos[1],
-        ]
+    for (let i = 0; i < circles.length; i++) {
+      for (let j = i + 1; j < circles.length; j++) {
+        const circle = circles[i]
+        const otherCircle = circles[j]
+        if (circle === otherCircle) continue
+        let diffX = circle.pos[0] - otherCircle.pos[0]
+        const diffY = circle.pos[1] - otherCircle.pos[1]
         // HACK:
         // if they are same position, move one of them a bit
-        if (difference[0] === 0 && difference[1] === 0) difference[0] += 0.1
-        const dist = Math.sqrt(difference[0] ** 2 + difference[1] ** 2)
-        const radiusSum = circle.radius + otherCircle.radius
-        if (dist < radiusSum) {
-          const overlap = radiusSum - dist
-          circle.pos[0] += difference[0] * (overlap / dist) * 0.5
-          circle.pos[1] += difference[1] * (overlap / dist) * 0.5
-          otherCircle.pos[0] -= difference[0] * (overlap / dist) * 0.5
-          otherCircle.pos[1] -= difference[1] * (overlap / dist) * 0.5
+        if (diffX === 0 && diffY === 0) diffX += 0.1
+        const dist = Math.sqrt(diffX ** 2 + diffY ** 2)
+        // const radiusSum = circle.radius + otherCircle.radius
+        if (dist < circle.radius + otherCircle.radius) {
+          // const overlap = circle.radius + otherCircle.radius - dist
+          circle.pos[0] +=
+            diffX * ((circle.radius + otherCircle.radius - dist) / dist) * 0.5
+          circle.pos[1] +=
+            diffY * ((circle.radius + otherCircle.radius - dist) / dist) * 0.5
+          otherCircle.pos[0] -=
+            diffX * ((circle.radius + otherCircle.radius - dist) / dist) * 0.5
+          otherCircle.pos[1] -=
+            diffY * ((circle.radius + otherCircle.radius - dist) / dist) * 0.5
         }
-      })
-    })
+      }
+    }
 
     // apply constraint
     circles.forEach((circle) => {
