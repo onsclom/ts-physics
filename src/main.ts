@@ -22,6 +22,12 @@ const CONSTRAINT = {
 
 let mousePos: [number, number] = [0, 0]
 
+// 4 steps per 120 fps frame
+const PHYSIC_STEPS_PER_SECOND = 120 * 4
+const physicDelta = 1 / PHYSIC_STEPS_PER_SECOND
+let lastTime = performance.now()
+let timeToProcess = 0
+
 update()
 canvas.onmousemove = (e) => (mousePos = [e.offsetX, e.offsetY])
 
@@ -42,10 +48,18 @@ function update() {
     })
   }
 
-  const physicSteps = 4
-  const physicDelta = 1 / physicSteps
+  const now = performance.now()
+  const delta = now - lastTime
+  timeToProcess += delta
+  lastTime = now
+
+  const physicSteps = Math.floor(
+    timeToProcess / (1000 / PHYSIC_STEPS_PER_SECOND)
+  )
+  timeToProcess -= physicSteps * (1000 / PHYSIC_STEPS_PER_SECOND)
 
   for (let i = 0; i < physicSteps; i++) {
+    console.time("update")
     // update circles
     circles.forEach((circle) => {
       const vel = [
@@ -55,7 +69,7 @@ function update() {
       circle.ogPos = [...circle.pos]
 
       // apply grav
-      circle.pos[1] += 0.075 * physicDelta ** 2
+      circle.pos[1] += 1000 * physicDelta ** 2
 
       // apply mouse force
       const mouseDiff: [number, number] = [
@@ -66,8 +80,8 @@ function update() {
       const dist = Math.sqrt(distSquared)
       if (dist < 50) {
         const normalized = normalize(mouseDiff)
-        circle.pos[0] -= normalized[0] * physicDelta ** 2
-        circle.pos[1] -= normalized[1] * physicDelta ** 2
+        circle.pos[0] -= normalized[0] * 100000 * physicDelta ** 2
+        circle.pos[1] -= normalized[1] * 100000 * physicDelta ** 2
       }
 
       // apply velocity
@@ -120,12 +134,14 @@ function update() {
           toCirc[1] * ((CONSTRAINT.radius - circle.radius) / dist)
       }
     })
+    console.timeEnd("update")
   }
 
   // ========================
   // DRAW
 
   const ctx = canvas.getContext("2d")!
+  ctx.imageSmoothingEnabled = false
 
   // stuff needed to handle high dpi screens and zoom
   const dpi = window.devicePixelRatio
