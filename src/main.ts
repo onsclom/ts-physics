@@ -3,6 +3,9 @@ const SIM_SIZE = 400
 const canvas = document.createElement("canvas")
 // allow canvas to be dragged on
 canvas.addEventListener("touchstart", (e) => e.preventDefault())
+document.addEventListener("touchmove", function (event) {
+  event.preventDefault()
+})
 
 document.body.appendChild(canvas)
 canvas.style.width = `${SIM_SIZE}px`
@@ -62,7 +65,6 @@ function update() {
   timeToProcess -= physicSteps * (1000 / PHYSIC_STEPS_PER_SECOND)
 
   for (let i = 0; i < physicSteps; i++) {
-    console.time("update")
     // update circles
     circles.forEach((circle) => {
       const vel = [
@@ -137,7 +139,6 @@ function update() {
           toCirc[1] * ((CONSTRAINT.radius - circle.radius) / dist)
       }
     })
-    console.timeEnd("update")
   }
 
   // ========================
