@@ -39,6 +39,9 @@ canvas.onpointermove = (e) => {
   mousePos = [e.offsetX, e.offsetY]
   e.preventDefault()
 }
+canvas.ontouchmove = (e) => {
+  e.preventDefault()
+}
 
 function update() {
   // ========================
