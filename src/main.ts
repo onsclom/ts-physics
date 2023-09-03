@@ -1,6 +1,9 @@
 const SIM_SIZE = 400
 
 const canvas = document.createElement("canvas")
+// allow canvas to be dragged on
+canvas.addEventListener("touchstart", (e) => e.preventDefault())
+
 document.body.appendChild(canvas)
 canvas.style.width = `${SIM_SIZE}px`
 canvas.style.height = `${SIM_SIZE}px`
