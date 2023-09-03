@@ -2,10 +2,10 @@ const SIM_SIZE = 400
 
 const canvas = document.createElement("canvas")
 // allow canvas to be dragged on
-canvas.addEventListener("touchstart", (e) => e.preventDefault())
-document.addEventListener("touchmove", function (event) {
-  event.preventDefault()
-})
+// canvas.addEventListener("touchstart", (e) => e.preventDefault())
+// document.addEventListener("touchmove", function (event) {
+//   event.preventDefault()
+// })
 
 document.body.appendChild(canvas)
 canvas.style.width = `${SIM_SIZE}px`
@@ -35,7 +35,10 @@ let lastTime = performance.now()
 let timeToProcess = 0
 
 update()
-canvas.onmousemove = (e) => (mousePos = [e.offsetX, e.offsetY])
+canvas.onpointermove = (e) => {
+  mousePos = [e.offsetX, e.offsetY]
+  e.preventDefault()
+}
 
 function update() {
   // ========================
